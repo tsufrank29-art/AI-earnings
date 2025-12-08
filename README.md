@@ -37,28 +37,24 @@ AI讀法說專案：提供近三個月台股法說會列表、AI 生成摘要與
 ## 系統架構圖（Workflow＆註解）
 ```mermaid
 flowchart TD
-    %% ---------- Front-end flows ----------
-    FE[Front-end App] -->|GET| API_List["GET<br/>&nbsp;/earnings_calls?range=3m"]
-    API_List -->|Query| DB[(PostgreSQL)]
+  subgraph Data
+    Crawler[Crawler\n02:00 UTC+8] --> MOPS[公開資訊觀測站]
+    Crawler --> DB[(DB: earnings_calls)]
+    DB --> Cold[冷層存放 >90天]
+  end
 
-    FE -->|GET| API_Content["GET<br/>&nbsp;/earnings_contents/{call_id}"]
-    API_Content -->|Redis&nbsp;hit?| Redis[(Redis)]
-    Redis -- hit --> FE
-    Redis -- miss --> DB
-    DB --> FE
+  subgraph API
+    DB --> API1[GET /v1/earnings_calls]
+    DB --> API2[GET /v1/earnings_calls/{id}]
+    DB --> FollowAPI[POST/DELETE/GET follow]
+    Vector[Slides+News 向量索引] --> API2
+  end
 
-    FE -->|POST| API_Follow["POST<br/>&nbsp;/users/{uid}/follow_earnings"]
-    API_Follow --> DB
-
-    %% ---------- Back-office flows ----------
-    Crawler["Daily<br/>Crawler"] -->|insert new<br/>earnings_calls| DB
-    Crawler -->|add pending<br/>task| Tasks[(earnings_tasks)]
-
-    Worker["LLM&nbsp;Worker<br/>(cron&nbsp;10&nbsp;min)"] -->|fetch<br/>pending| Tasks
-    Worker -->|download&nbsp;PDF<br/>+ call&nbsp;OpenAI| LLM[(GPT-4o)]
-    LLM -->|summary<br/>+ analysis| Worker
-    Worker -->|write summary<br/>to DB| DB
-    Worker -->|cache to<br/>Redis| Redis
+  User[使用者] -->|列表/搜尋| API1
+  User -->|點卡片| API2
+  User -->|收藏/取消| FollowAPI
+  API2 --> Cache[Redis 30 min]
+  NewCall[首次點擊/新資料] --> LLM[GPT-4o 生成摘要/分析] --> DB
 ```
 
 ## User Journey（端到端行為路徑）
