@@ -20,11 +20,11 @@ jobs:
 
       - name: Install deps
         run: npm install   
-        working-directory: ai-earning-dem
+        working-directory: ai-earning-demo
 
       - name: Build
         run: npm run build # 會產出 dist/
-        working-directory: ai-earning-dem
+        working-directory: ai-earning-demo
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
