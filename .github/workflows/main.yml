@@ -19,10 +19,12 @@ jobs:
           node-version: 18
 
       - name: Install deps
-        run: npm install        
+        run: npm install   
+        working-directory: ai-earning-dem
 
       - name: Build
         run: npm run build # 會產出 dist/
+        working-directory: ai-earning-dem
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
