@@ -5,6 +5,10 @@ on:
   push:
     branches: [main]  
 
+# 給這支 workflow 寫 repo 的權限
+permissions:
+  contents: write       # ← 關鍵！允許 push
+
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
