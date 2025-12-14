@@ -2,6 +2,12 @@
 
 AI讀法說專案：提供近三個月台股法說會列表、AI 生成摘要與分析、收藏與回訪體驗。
 
+## 靜態前端（GitHub Pages 用）
+- 路徑：`ai-earning-demo/index.html`
+- 特色：內建搜尋、日期分組列表、收藏/取消收藏（localStorage）、空態提示、內頁摘要/AI 分析/資料來源與 Archived 標記。
+- 部署：直接推送此資料夾至 GitHub Pages（主/gh-pages branch 均可），不需建置流程。
+
+
 ## 使用方式
 1. 參考 `docs/PRD.md` 理解產品需求與假設。
 2. 依 `docs/API_DESIGN.md` 的端點規格實作後端服務。
