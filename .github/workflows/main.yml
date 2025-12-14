@@ -1,0 +1,37 @@
+# .github/workflows/deploy.yml
+name: Build & Deploy Vite Site
+
+on:
+  push:
+    branches: [main]  
+
+# 給這支 workflow 寫 repo 的權限
+permissions:
+  contents: write       # ← 關鍵！允許 push
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install deps
+        run: npm install   
+        working-directory: ai-earning-demo
+
+      - name: Build
+        run: npm run build # 會產出 dist/
+        working-directory: ai-earning-demo
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
