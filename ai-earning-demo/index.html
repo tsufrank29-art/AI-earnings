@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 讀法說 Demo</title>
+  <link rel="icon" type="image/svg+xml" href="https://www.svgrepo.com/show/530439/chart.svg" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <header class="sticky top-0 z-10 border-b border-slate-200 bg-white/90 backdrop-blur">
+    <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
+      <div>
+        <p class="text-xs font-semibold tracking-wide text-indigo-500">AI 讀法說</p>
+        <h1 class="text-2xl font-bold">Earnings Calls</h1>
+      </div>
+      <div class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">靜態預覽版</div>
+    </div>
+    <nav class="mx-auto flex max-w-5xl gap-2 px-4 pb-3" aria-label="Tabs">
+      <button data-tab="list" class="tab-btn" aria-current="page">法說會列表</button>
+      <button data-tab="follow" class="tab-btn">我關注的法說</button>
+    </nav>
+  </header>
+
+  <main class="mx-auto max-w-5xl space-y-8 px-4 py-6">
+    <section id="list-section" class="space-y-4" aria-label="法說會列表">
+      <div class="flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-sm shadow-slate-200">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 class="text-lg font-semibold text-slate-900">近三個月法說會</h2>
+            <p class="text-sm text-slate-600">搜尋個股代號或名稱，點擊卡片查看摘要</p>
+          </div>
+          <div class="text-xs text-slate-500">共 <span id="total-count">0</span> 檔</div>
+        </div>
+        <label class="relative w-full sm:w-80">
+          <span class="sr-only">搜尋</span>
+          <span class="pointer-events-none absolute inset-y-0 left-3 inline-flex items-center text-slate-400">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+              <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 3.407 9.79l3.651 3.652a.75.75 0 1 0 1.06-1.06l-3.652-3.652A5.5 5.5 0 0 0 9 3.5Zm-4 5.5a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z" clip-rule="evenodd" />
+            </svg>
+          </span>
+          <input id="search" type="search" placeholder="搜尋個股名稱或代號" class="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2 pl-10 pr-3 text-sm outline-none transition focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-100" />
+        </label>
+      </div>
+      <div id="call-list" class="space-y-4"></div>
+      <div id="empty-list" class="hidden rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-center text-sm text-slate-500">
+        <div class="mb-2 text-3xl">📄</div>
+        查無符合的法說會資料
+      </div>
+    </section>
+
+    <section id="follow-section" class="hidden space-y-4" aria-label="我關注的法說">
+      <div class="rounded-2xl bg-white p-4 shadow-sm shadow-slate-200">
+        <h2 class="text-lg font-semibold text-slate-900">我的關注</h2>
+        <p class="text-sm text-slate-600">僅顯示已加入關注的法說會</p>
+      </div>
+      <div id="follow-list" class="space-y-4"></div>
+      <div id="empty-follow" class="hidden rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-center text-sm text-slate-500">
+        <div class="mb-2 text-3xl">🪶</div>
+        尚未加入任何關注
+      </div>
+    </section>
+
+    <section id="detail-section" class="hidden space-y-4" aria-label="法說會內頁">
+      <div class="flex items-center gap-3">
+        <button id="back-btn" class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:shadow" type="button">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+            <path fill-rule="evenodd" d="M15 10a.75.75 0 0 1-.75.75H6.56l2.47 2.47a.75.75 0 0 1-1.06 1.06l-3.75-3.75a.75.75 0 0 1 0-1.06l3.75-3.75a.75.75 0 0 1 1.06 1.06L6.56 9.25h7.69A.75.75 0 0 1 15 10Z" clip-rule="evenodd" />
+          </svg>
+          返回列表
+        </button>
+        <div class="text-xs text-slate-500">內容為示意資料</div>
+      </div>
+      <div class="rounded-2xl bg-white p-5 shadow-sm shadow-slate-200">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+          <div class="space-y-1">
+            <p id="detail-name" class="text-xl font-semibold">--</p>
+            <p id="detail-date" class="text-sm text-slate-600">--</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="archived-badge" class="hidden rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">Archived</span>
+            <button id="follow-toggle" class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-indigo-500">
+              <span>加入關注</span>
+            </button>
+          </div>
+        </div>
+        <div class="mt-4 grid gap-4 md:grid-cols-2">
+          <div class="space-y-2">
+            <h3 class="section-title">法說會摘要</h3>
+            <div id="summary" class="prose prose-slate max-w-none text-sm"></div>
+          </div>
+          <div class="space-y-2">
+            <h3 class="section-title">AI 分析</h3>
+            <div id="ai-insight" class="prose prose-slate max-w-none text-sm"></div>
+          </div>
+        </div>
+        <div class="mt-5 space-y-2">
+          <h3 class="section-title">資料來源</h3>
+          <ul id="sources" class="list-disc space-y-1 pl-5 text-sm text-indigo-700"></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-slate-200 bg-white py-6">
+    <div class="mx-auto flex max-w-5xl flex-col gap-1 px-4 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+      <span>Demo 僅供介面展示，資料來源為靜態檔案。</span>
+      <span>適用於 GitHub Pages 靜態部署</span>
+    </div>
+  </footer>
+
+  <script type="module" src="./script.js"></script>
+</body>
+</html>
