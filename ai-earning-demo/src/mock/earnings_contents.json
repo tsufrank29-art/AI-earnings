@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "call_id": 1,
+    "summary_html": "<p>台積電（TSMC）於 2025 年 10 月 16 日召開第三季法人說明會，由財務長黃仁昭（Wendel Huang）與董事長暨總裁魏哲家（Dr. CC Wei）共同主持。本次法說會不僅公布了優於預期的第三季財報與穩健的第四季展望，魏哲家更對 AI 帶來的結構性需求表達了前所未有的強烈信心，並上修全年營收展望。在問答環節中，管理層進一步闡述了對 AI 成長、產能規劃、技術價值及市場競爭的看法。</p>",
+    "ai_insight_html": "<p>AI 的長期成長率與資本支出規劃？魏哲家表示，AI 需求比三個月前預期更強勁，原先預估的 40% 中期年複合成長率（CAGR）將會「更好一點」。財務長黃仁昭補充，只要有商業機會就不會猶豫投資，並預期未來營收成長將持續超越資本支出的成長速度。</p>",
+    "sources": ["https://example.com/tsmc-slides", "https://news.example.com/tsmc-earnings"]
+  },
+  {
+    "id": 2,
+    "call_id": 2,
+    "summary_html": "<p>鴻海聚焦電動車與 AI 伺服器代工，2026 年車用營收比重目標 20%。</p>",
+    "ai_insight_html": "<p>雖手機代工平穩，但雲端硬體訂單能見度增。關注美中供應鏈調整與在地化帶來的成本。</p>",
+    "sources": ["https://example.com/honhai-pdf", "https://news.example.com/honhai-ec"]
+  },
+  {
+    "id": 3,
+    "call_id": 3,
+    "summary_html": "<p>聯發科受惠 AI 手機 SoC，ASP 提升；車用與寬頻業務穩定。</p>",
+    "ai_insight_html": "<p>新一代天璣平台導入生成式 AI，帶動旗艦與高階市占。留意晶圓代工成本上升對毛利的影響。</p>",
+    "sources": ["https://example.com/mtk-slides"]
+  },
+  {
+    "id": 4,
+    "call_id": 4,
+    "summary_html": "<p>富邦金淨值與資本適足率維持高檔，壽險投資收益回升。</p>",
+    "ai_insight_html": "<p>利差擴大推升壽險獲利，但海外債券重分類風險需關注；數位理財推進提升用戶黏著。</p>",
+    "sources": ["https://example.com/fubon-pdf"]
+  },
+  {
+    "id": 5,
+    "call_id": 5,
+    "summary_html": "<p>聯電 28/22nm 需求回升，產能利用率改善；車用與工控訂單穩健。</p>",
+    "ai_insight_html": "<p>成熟製程價格回穩，2026 年資本支出保守。留意中國晶圓廠競爭與價格壓力。</p>",
+    "sources": ["https://example.com/umc-slides"]
+  },
+  {
+    "id": 6,
+    "call_id": 6,
+    "summary_html": "<p>長榮運價自低點回升，亞歐線需求改善，長約簽訂比例提升。</p>",
+    "ai_insight_html": "<p>紅海風險與燃油價格波動為主要變數，但高現金水位支撐股利發放。</p>",
+    "sources": ["https://example.com/evergreen-report"]
+  },
+  {
+    "id": 7,
+    "call_id": 7,
+    "summary_html": "<p>台塑化受惠油價回升，煉油利差改善，石化庫存回補。</p>",
+    "ai_insight_html": "<p>全球需求仍溫和，留意冬季油價波動；碳費政策可能推升成本。</p>",
+    "sources": ["https://example.com/fpc-report"]
+  },
+  {
+    "id": 8,
+    "call_id": 8,
+    "summary_html": "<p>台泥因基期低呈現年增，海外併購帶動市占提升。</p>",
+    "ai_insight_html": "<p>水泥需求回溫但能源成本偏高，海外礦區進度與匯率波動為主要風險。</p>",
+    "sources": ["https://example.com/tcc-report"]
+  }
+]
