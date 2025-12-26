@@ -40,50 +40,50 @@ AI讀法說專案：提供近三個月台股法說會列表、AI 生成摘要與
 - `POST /v1/users/{uid}/follow_earnings` / `DELETE /v1/users/{uid}/follow_earnings`：收藏/取消收藏。
 - `GET /v1/users/{uid}/follow_earnings`：收藏清單，預設近 6 個月，可載入更多。
 
+## LLM 生成提示詞
+**System**
+- 你是專業的台股研究助理，擅長將法說會簡報與新聞內容整理為可行動的投資資訊。
+- 請以繁體中文輸出，語氣中立客觀，避免投資建議或喊單語氣。
+- 內容需清楚分段，避免杜撰；只根據提供的資料來源。
+
+**User**
+```
+請根據以下資料來源，產出法說會摘要與 AI 分析：
+
+【公司資訊】
+- 公司：{{stock_name}}（{{stock_code}}）
+- 法說會日期：{{call_date}}
+
+【資料來源】
+{{sources_text}}
+
+【輸出格式】
+1. 法說會摘要（200–300 字）
+2. AI 分析（≤ 500 字，分段呈現）
+3. 資料來源（條列來源標題與連結）
+```
+
 ## 系統架構圖（Workflow＆註解）
 ```mermaid
 flowchart TD
-    %% ===== Frontend =====
-    FE[Frontend App]
+  subgraph Data
+    Crawler[Crawler\n02:00 UTC+8] --> MOPS[公開資訊觀測站]
+    Crawler --> DB[(DB: earnings_calls)]
+    DB --> Cold[冷層存放 >90天]
+  end
 
-    %% ===== API Layer =====
-    API_LIST["GET /v1/earnings_calls<br/>近三個月法說列表"]
-    API_DETAIL["GET /v1/earnings_calls/{id}<br/>法說內容"]
-    API_FOLLOW["POST /v1/follow"]
+  subgraph API
+    DB --> API1[GET /v1/earnings_calls]
+    DB --> API2[GET /v1/earnings_calls/{id}]
+    DB --> FollowAPI[POST/DELETE/GET follow]
+    Vector[Slides+News 向量索引] --> API2
+  end
 
-    %% ===== Storage =====
-    DB[(Database)]
-    REDIS[(Redis Cache)]
-
-    %% ===== LLM Pipeline =====
-    CRAWLER["Crawler<br/>抓 MOPS / TWSE"]
-    TASKS[(earnings_tasks)]
-    WORKER["LLM Worker"]
-    LLM["LLM API"]
-
-    %% ===== User Flow =====
-    FE --> API_LIST
-    API_LIST --> DB
-
-    FE --> API_DETAIL
-    API_DETAIL --> REDIS
-    REDIS --> FE
-    API_DETAIL --> DB
-    DB --> FE
-
-    FE --> API_FOLLOW
-    API_FOLLOW --> DB
-
-    %% ===== Data Pipeline =====
-    CRAWLER --> DB
-    CRAWLER --> TASKS
-
-    WORKER --> TASKS
-    WORKER --> LLM
-    LLM --> WORKER
-    WORKER --> DB
-    WORKER --> REDIS
-
+  User[使用者] -->|列表/搜尋| API1
+  User -->|點卡片| API2
+  User -->|收藏/取消| FollowAPI
+  API2 --> Cache[Redis 30 min]
+  NewCall[首次點擊/新資料] --> LLM[GPT-4o 生成摘要/分析] --> DB
 ```
 
 ## User Journey（端到端行為路徑）
@@ -140,4 +140,3 @@ sequenceDiagram
 - **我關注的法說**
   - 用戶端：展示收藏卡片（預設 6 個月）、載入更多、可取消收藏。
   - 系統端：JOIN 冷/熱層回傳收藏列表；App 啟動時執行增量同步；埋點 follow_list_view、follow_card_click、unfollow_swipe。
-
