@@ -43,24 +43,47 @@ AI讀法說專案：提供近三個月台股法說會列表、AI 生成摘要與
 ## 系統架構圖（Workflow＆註解）
 ```mermaid
 flowchart TD
-  subgraph Data
-    Crawler[Crawler\n02:00 UTC+8] --> MOPS[公開資訊觀測站]
-    Crawler --> DB[(DB: earnings_calls)]
-    DB --> Cold[冷層存放 >90天]
-  end
+    %% ===== Frontend =====
+    FE[Frontend App]
 
-  subgraph API
-    DB --> API1[GET /v1/earnings_calls]
-    DB --> API2[GET /v1/earnings_calls/{id}]
-    DB --> FollowAPI[POST/DELETE/GET follow]
-    Vector[Slides+News 向量索引] --> API2
-  end
+    %% ===== API Layer =====
+    API_LIST["GET /v1/earnings_calls<br/>近三個月法說列表"]
+    API_DETAIL["GET /v1/earnings_calls/{id}<br/>法說內容"]
+    API_FOLLOW["POST /v1/follow"]
 
-  User[使用者] -->|列表/搜尋| API1
-  User -->|點卡片| API2
-  User -->|收藏/取消| FollowAPI
-  API2 --> Cache[Redis 30 min]
-  NewCall[首次點擊/新資料] --> LLM[GPT-4o 生成摘要/分析] --> DB
+    %% ===== Storage =====
+    DB[(Database)]
+    REDIS[(Redis Cache)]
+
+    %% ===== LLM Pipeline =====
+    CRAWLER["Crawler<br/>抓 MOPS / TWSE"]
+    TASKS[(earnings_tasks)]
+    WORKER["LLM Worker"]
+    LLM["LLM API"]
+
+    %% ===== User Flow =====
+    FE --> API_LIST
+    API_LIST --> DB
+
+    FE --> API_DETAIL
+    API_DETAIL --> REDIS
+    REDIS --> FE
+    API_DETAIL --> DB
+    DB --> FE
+
+    FE --> API_FOLLOW
+    API_FOLLOW --> DB
+
+    %% ===== Data Pipeline =====
+    CRAWLER --> DB
+    CRAWLER --> TASKS
+
+    WORKER --> TASKS
+    WORKER --> LLM
+    LLM --> WORKER
+    WORKER --> DB
+    WORKER --> REDIS
+
 ```
 
 ## User Journey（端到端行為路徑）
