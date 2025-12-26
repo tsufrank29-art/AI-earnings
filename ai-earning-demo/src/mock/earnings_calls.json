@@ -1,0 +1,10 @@
+[
+  { "id": 1, "stock_code": "2330", "stock_name": "台積電", "call_date": "2025-12-02" },
+  { "id": 2, "stock_code": "2317", "stock_name": "鴻海", "call_date": "2025-11-25" },
+  { "id": 3, "stock_code": "2454", "stock_name": "聯發科", "call_date": "2025-11-18" },
+  { "id": 4, "stock_code": "2881", "stock_name": "富邦金", "call_date": "2025-11-08" },
+  { "id": 5, "stock_code": "2303", "stock_name": "聯電", "call_date": "2025-10-30" },
+  { "id": 6, "stock_code": "2603", "stock_name": "長榮", "call_date": "2025-10-15" },
+  { "id": 7, "stock_code": "6505", "stock_name": "台塑化", "call_date": "2025-09-28" },
+  { "id": 8, "stock_code": "1101", "stock_name": "台泥", "call_date": "2025-08-20" }
+]
